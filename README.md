@@ -55,8 +55,7 @@ IPAddress myip=IPAddress.Parse("192.168.1.1");//使用Parse()方法创建一个I
 (2) `IPEndPoint`类：IPEndPoint对象用来表示指定的`IP地址/端口组合`。当把套接字绑定到本地地址的时候，或者在把套接字连接到远程地址的时候，使用`IPEndPoint`对象。下面的语句用于创建IPEndPoint实例： 
 ```cpp
 IPEndPoint myie=new IPEndPoint(long address,int port); 
-IPEndPoint myie=new IPEndPoint(IPAddress address,int 
-port); 
+IPEndPoint myie=new IPEndPoint(IPAddress address,int port); 
 ```
 两个构造函数都使用两个参数：一个是长值表示或者用IPAdress对象表示；另一个是整数端口号。 
 
@@ -97,29 +96,29 @@ Flush();//将所有的StreamWriter缓冲区数据发送到下层数据流中
 设计思路
 -----------
 实验平台以PC机和FPGA教育开发板为基础，采用三层次结构，总体框架如下图所示。
-![实验平台总体架构](https://github.com/HDUZZB/Online-FPGA-Experiment-Platform/blob/master/image/1.png) 
+![实验平台总体架构](https://github.com/HDUZZB/Online-FPGA-Experiment-Platform/blob/master/image/1.png)  
 下层是基于FPGA的学生实验模块，该模块提供了一系列的通用端口，实验者用硬件描述语言完成实验设计，通过通用端口以实现不同硬件课程对该部分的共享。上层为PC机实验软件，该软件以导入或配置实验原理图和动态添加、配置观察信号相结合的方式达到与下层实验内容的一致性，以图形化的界面直观的完成实验过程的控制；中间层是嵌入式实验控制器，为上下层之间的数据通信提供服务。平台利用FPGA的可编程性和大容量，将嵌入式实验控制器和实验模块集成在一块FPGA内部；通过USB接口完成PC机和实验控制器之间的数据传输。  
 
 而TCP网络通信可以由几种方法实现，其核心都是基于Socket进行通信的，所不同的是使用类中的方法不同，传递的信息类型不同。  
-`(1)用Socket类中的Send()和Receive()方法发送和接收数据`  
-用Socket类中的`Send()`和`Receive()`方法发送和接收数据只能`处理字符型的数组数据`。因此要用`System.Text命名空间`的`Encoding.ASCII类`中的方法`GetByte()`、`GetString()`进行字符串和字符型数据之间相互转换。在TCP网络编程中，如果使用`Socket类`中的`Send()`和`Receive()`方法发送和接收数据，必须考虑`TCP数据缓冲区的处理`和`网络上的TCP消息处理`，否则可能会出现通信中的故障。对于数据缓冲区来说，如果使用的缓冲区太小会导致消息的不匹配；如果使用的缓冲区太大会导致消息的混乱。对于网络上的TCP消息处理，必须考虑消息的边界问题。在网络编程中可以采用几点措施进行解决：`永远发送固定长度的消息`；`将消息尺寸与消息一起发送`；`使用标记系统分隔消息`。 
-`(2)用NetworkStream类中的Write()和Read()方法发送和接收数据`
-与Socket类的方法相比，虽然NetworkStream类提供了一些另外的功能，但从套接字中发送和接收数据时`仍然受到限制，同样存在消息边界问题`。 
+`(1)用Socket类中的Send()和Receive()方法发送和接收数据`   
+用Socket类中的`Send()`和`Receive()`方法发送和接收数据只能`处理字符型的数组数据`。因此要用`System.Text命名空间`的`Encoding.ASCII类`中的方法`GetByte()`、`GetString()`进行字符串和字符型数据之间相互转换。在TCP网络编程中，如果使用`Socket类`中的`Send()`和`Receive()`方法发送和接收数据，必须考虑`TCP数据缓冲区的处理`和`网络上的TCP消息处理`，否则可能会出现通信中的故障。对于数据缓冲区来说，如果使用的缓冲区太小会导致消息的不匹配；如果使用的缓冲区太大会导致消息的混乱。对于网络上的TCP消息处理，必须考虑消息的边界问题。在网络编程中可以采用几点措施进行解决：`永远发送固定长度的消息`；`将消息尺寸与消息一起发送`；`使用标记系统分隔消息`。  
+`(2)用NetworkStream类中的Write()和Read()方法发送和接收数据`  
+与Socket类的方法相比，虽然NetworkStream类提供了一些另外的功能，但从套接字中发送和接收数据时`仍然受到限制，同样存在消息边界问题`。  
 `(3)用StreamReader类和StreamWriter类`  
-StreamReader类和StreamWriter类可以`控制在一个数据流上对文本消息的读写操作`。这样可以较好解决TCP数据缓冲区和TCP消息边界问题。以提高网络通信的质量。
+StreamReader类和StreamWriter类可以`控制在一个数据流上对文本消息的读写操作`。这样可以较好解决TCP数据缓冲区和TCP消息边界问题。以提高网络通信的质量。  
 
 ### 硬件平台
 硬件部分我们采用FPGA控制板来进行设计，通过我们相关实验的特点，根据实验中常用到的功能将硬件系统分为供电模块、时钟模块、实验FPGA模块、主控FPGA模块、数据流存储模块、通信模块、激励增加模块和响应收集模块。详细结构如下图所示。
-![硬件系统框图](https://github.com/HDUZZB/Online-FPGA-Experiment-Platform/blob/master/image/2.png) 
+![硬件系统框图](https://github.com/HDUZZB/Online-FPGA-Experiment-Platform/blob/master/image/2.png)  
 
 ### 软件平台
 软件平台主要完成实验数据的输入和实验结果的输出。在本设计中通过对FPGA8位流水灯的实验作为演示，设计了相应配套的客户端和服务器端。
-![客户端图片](https://github.com/HDUZZB/Online-FPGA-Experiment-Platform/blob/master/image/3.jpg) 
-![服务器端图片](https://github.com/HDUZZB/Online-FPGA-Experiment-Platform/blob/master/image/4.jpg) 
+![客户端图片](https://github.com/HDUZZB/Online-FPGA-Experiment-Platform/blob/master/image/3.jpg)  
+![服务器端图片](https://github.com/HDUZZB/Online-FPGA-Experiment-Platform/blob/master/image/4.jpg)  
 
-首先，我们通过FPGA仿真软件得到相应的数据文件，并进行网络通信将文件传输到服务器端进行远程实验。在使用TCP协议进行通信时，一般服务端进程先使用socket调用得到一个描述符，然后使用bind调用将一个名字与socket描述符连接起来，对于Internet域就是将Internet地址联编到socket之后，服务端使用listen调用指出等待服务请求队列的长度。然后就可以使用accept调用等待客户端发起连接。一般是阻塞等待连接，一旦有客户端发出连接，accept返回客户的地址信息，并返回一个新的socket描述符，该描述符与原先的socket有相同的特性，这时服务端就可以使用这个新的socket进行读写操作了。一般服务端可能在accept返回后创建一个新的进程进行与客户的通信，父进程则再到accept调用处等待另一个连接。客户端进程一般先使用socket调用得到一个socket描述符，然后使用connect向指定的服务器上的指定端口发起连接，一旦连接成功返回，就说明已经建立了与服务器的连接，这时就可以通过socket描述符进行读写操作了。其服务器通信过程与客户机通信过程如下图所示。 
-![服务器通信过程](https://github.com/HDUZZB/Online-FPGA-Experiment-Platform/blob/master/image/5.jpg) 
-![客户机通信过程](https://github.com/HDUZZB/Online-FPGA-Experiment-Platform/blob/master/image/6.jpg) 
+首先，我们通过FPGA仿真软件得到相应的数据文件，并进行网络通信将文件传输到服务器端进行远程实验。在使用TCP协议进行通信时，一般服务端进程先使用socket调用得到一个描述符，然后使用bind调用将一个名字与socket描述符连接起来，对于Internet域就是将Internet地址联编到socket之后，服务端使用listen调用指出等待服务请求队列的长度。然后就可以使用accept调用等待客户端发起连接。一般是阻塞等待连接，一旦有客户端发出连接，accept返回客户的地址信息，并返回一个新的socket描述符，该描述符与原先的socket有相同的特性，这时服务端就可以使用这个新的socket进行读写操作了。一般服务端可能在accept返回后创建一个新的进程进行与客户的通信，父进程则再到accept调用处等待另一个连接。客户端进程一般先使用socket调用得到一个socket描述符，然后使用connect向指定的服务器上的指定端口发起连接，一旦连接成功返回，就说明已经建立了与服务器的连接，这时就可以通过socket描述符进行读写操作了。其服务器通信过程与客户机通信过程如下图所示。  
+![服务器通信过程](https://github.com/HDUZZB/Online-FPGA-Experiment-Platform/blob/master/image/5.jpg)  
+![客户机通信过程](https://github.com/HDUZZB/Online-FPGA-Experiment-Platform/blob/master/image/6.jpg)  
 
 测试
 -----------
@@ -127,29 +126,29 @@ StreamReader类和StreamWriter类可以`控制在一个数据流上对文本消�
 
 ### 测试流程
 
-#### 1、首先测试服务器端端口是否开启
-![测试服务器端端口是否开启示意图](https://github.com/HDUZZB/Online-FPGA-Experiment-Platform/blob/master/image/7.png) 
-弹出提示信息，端口正常开启
+#### 1、首先测试服务器端端口是否开启  
+![测试服务器端端口是否开启示意图](https://github.com/HDUZZB/Online-FPGA-Experiment-Platform/blob/master/image/7.png)   
+弹出提示信息，端口正常开启  
 
 #### 2、测试客户端连接服务器端是否成功
-![测试客户端连接服务器端是否成功示意图](https://github.com/HDUZZB/Online-FPGA-Experiment-Platform/blob/master/image/8.png) 
-弹出提示信息，端口连接成功
+![测试客户端连接服务器端是否成功示意图](https://github.com/HDUZZB/Online-FPGA-Experiment-Platform/blob/master/image/8.png)   
+弹出提示信息，端口连接成功  
 
 #### 3、测试文件传输功能
-![测试文件传输功能示意图](https://github.com/HDUZZB/Online-FPGA-Experiment-Platform/blob/master/image/9.png) 
-![测试文件传输功能示意图](https://github.com/HDUZZB/Online-FPGA-Experiment-Platform/blob/master/image/10.png) 
-文件传输结束后打印提示信息，文件传输及保存成功
+![测试文件传输功能示意图](https://github.com/HDUZZB/Online-FPGA-Experiment-Platform/blob/master/image/9.png)   
+![测试文件传输功能示意图](https://github.com/HDUZZB/Online-FPGA-Experiment-Platform/blob/master/image/10.png)   
+文件传输结束后打印提示信息，文件传输及保存成功  
 
 #### 4、测试客户端接受消息开关
-![测试客户端连接服务器端是否成功示意图](https://github.com/HDUZZB/Online-FPGA-Experiment-Platform/blob/master/image/11.png) 
-接收消息开关开启，打印提示信息
+![测试客户端连接服务器端是否成功示意图](https://github.com/HDUZZB/Online-FPGA-Experiment-Platform/blob/master/image/11.png)  
+接收消息开关开启，打印提示信息  
 
 #### 5、测试服务器端能否自动下载程序至FPGA开发板
-![测试服务器端能否自动下载程序至FPGA开发板示意图](https://github.com/HDUZZB/Online-FPGA-Experiment-Platform/blob/master/image/12.png) 
-![测试服务器端能否自动下载程序至FPGA开发板示意图](https://github.com/HDUZZB/Online-FPGA-Experiment-Platform/blob/master/image/13.png) 
+![测试服务器端能否自动下载程序至FPGA开发板示意图](https://github.com/HDUZZB/Online-FPGA-Experiment-Platform/blob/master/image/12.png)  
+![测试服务器端能否自动下载程序至FPGA开发板示意图](https://github.com/HDUZZB/Online-FPGA-Experiment-Platform/blob/master/image/13.png)  
 
 #### 6、测试服务器端实验显示情况
-![测试服务器端实验显示情况示意图](https://github.com/HDUZZB/Online-FPGA-Experiment-Platform/blob/master/image/14.png) 
+![测试服务器端实验显示情况示意图](https://github.com/HDUZZB/Online-FPGA-Experiment-Platform/blob/master/image/14.png)  
 
 #### 7、测试客户端实验显示情况
-![测试客户端实验显示情况示意图](https://github.com/HDUZZB/Online-FPGA-Experiment-Platform/blob/master/image/15.png) 
+![测试客户端实验显示情况示意图](https://github.com/HDUZZB/Online-FPGA-Experiment-Platform/blob/master/image/15.png)  
