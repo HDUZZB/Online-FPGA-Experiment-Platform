@@ -95,7 +95,7 @@ Flush();//将所有的StreamWriter缓冲区数据发送到下层数据流中
 
 设计思路
 -----------
-实验平台以PC机和FPGA教育开发板为基础，采用三层次结构，总体框架如下图所示。
+实验平台以PC机和FPGA教育开发板为基础，采用三层次结构，总体框架如下图所示。  
 ![实验平台总体架构](https://github.com/HDUZZB/Online-FPGA-Experiment-Platform/blob/master/image/1.png)  
 下层是基于FPGA的学生实验模块，该模块提供了一系列的通用端口，实验者用硬件描述语言完成实验设计，通过通用端口以实现不同硬件课程对该部分的共享。上层为PC机实验软件，该软件以导入或配置实验原理图和动态添加、配置观察信号相结合的方式达到与下层实验内容的一致性，以图形化的界面直观的完成实验过程的控制；中间层是嵌入式实验控制器，为上下层之间的数据通信提供服务。平台利用FPGA的可编程性和大容量，将嵌入式实验控制器和实验模块集成在一块FPGA内部；通过USB接口完成PC机和实验控制器之间的数据传输。  
 
@@ -108,11 +108,11 @@ Flush();//将所有的StreamWriter缓冲区数据发送到下层数据流中
 StreamReader类和StreamWriter类可以`控制在一个数据流上对文本消息的读写操作`。这样可以较好解决TCP数据缓冲区和TCP消息边界问题。以提高网络通信的质量。  
 
 ### 硬件平台
-硬件部分我们采用FPGA控制板来进行设计，通过我们相关实验的特点，根据实验中常用到的功能将硬件系统分为供电模块、时钟模块、实验FPGA模块、主控FPGA模块、数据流存储模块、通信模块、激励增加模块和响应收集模块。详细结构如下图所示。
+硬件部分我们采用FPGA控制板来进行设计，通过我们相关实验的特点，根据实验中常用到的功能将硬件系统分为供电模块、时钟模块、实验FPGA模块、主控FPGA模块、数据流存储模块、通信模块、激励增加模块和响应收集模块。详细结构如下图所示。  
 ![硬件系统框图](https://github.com/HDUZZB/Online-FPGA-Experiment-Platform/blob/master/image/2.png)  
 
 ### 软件平台
-软件平台主要完成实验数据的输入和实验结果的输出。在本设计中通过对FPGA8位流水灯的实验作为演示，设计了相应配套的客户端和服务器端。
+软件平台主要完成实验数据的输入和实验结果的输出。在本设计中通过对FPGA8位流水灯的实验作为演示，设计了相应配套的客户端和服务器端。  
 ![客户端图片](https://github.com/HDUZZB/Online-FPGA-Experiment-Platform/blob/master/image/3.jpg)  
 ![服务器端图片](https://github.com/HDUZZB/Online-FPGA-Experiment-Platform/blob/master/image/4.jpg)  
 
